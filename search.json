@@ -4,7 +4,7 @@
 {% assign ents = site.pages | where: "layout", "default" | sort: "url" %}
 {% assign first = false %}
 {% for p in ents %}
-{% unless p.url == '/index.html' %}
+{% unless p.url == '/' %}
 {% if first %},{% endif %}{% assign first = true %}
 {
   "t": {{ p.title | default: p.name | jsonify }},

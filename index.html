@@ -92,11 +92,11 @@ title: 首页
 </table>
 
 <h2>文档目录（docs/ 全量）</h2>
-{% assign g_concl = site.pages | where: "layout", "default" | where_exp: "p", "p.url == '/最终结论.html'" %}
-{% assign g_exp   = site.pages | where: "layout", "default" | where_exp: "p", "p.url contains '/实验/'" | sort: "url" %}
-{% assign g_design = site.pages | where: "layout", "default" | where_exp: "p", "p.url contains '/设计/'" | sort: "url" %}
-{% assign g_res   = site.pages | where: "layout", "default" | where_exp: "p", "p.url contains '/研究/'" | sort: "url" %}
-{% assign g_ref   = site.pages | where: "layout", "default" | where_exp: "p", "p.url contains '/参考/'" | sort: "url" %}
+{% assign g_concl = site.pages | where: "layout", "default" | where_exp: "p", "p.path == '最终结论.md'" %}
+{% assign g_exp   = site.pages | where: "layout", "default" | where_exp: "p", "p.path contains '实验/'" | sort: "url" %}
+{% assign g_design = site.pages | where: "layout", "default" | where_exp: "p", "p.path contains '设计/'" | sort: "url" %}
+{% assign g_res   = site.pages | where: "layout", "default" | where_exp: "p", "p.path contains '研究/'" | sort: "url" %}
+{% assign g_ref   = site.pages | where: "layout", "default" | where_exp: "p", "p.path contains '参考/'" | sort: "url" %}
 {% assign g_all   = site.pages | where: "layout", "default" %}
 <p class="doc-note">以下由站点构建时自动收录，共 {{ g_all.size | minus: 1 }} 篇（不含本页）；
 新增文档放入 <code>docs/</code> 并带 front matter（文件头部的元数据声明，指定版式与标题）后，
