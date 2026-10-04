@@ -6,7 +6,7 @@
 <title>{% if page.title and page.url != '/index.html' %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
 <meta name="description" content="{{ site.description }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css">
-<link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}?v={{ site.time | date: '%Y%m%d%H%M' }}">
 </head>
 <body data-base="{{ site.baseurl }}">
 <header class="topbar">
@@ -68,6 +68,6 @@
   </main>
 </div>
 
-<script src="{{ '/assets/site.js' | relative_url }}"></script>
+<script src="{{ '/assets/site.js' | relative_url }}?v={{ site.time | date: '%Y%m%d%H%M' }}"></script>
 </body>
 </html>
