@@ -162,6 +162,147 @@
     }
   }
 
+  /* ---------------- 版本记录表格速览 ----------------
+   * 适用于「实验版本记录」类长文档：h3 版本块（vX.Y · EXX 主题（日期…））自动解析为
+   * 速览表（按时间倒序），可随时切回全文；点「详见」跳回全文对应小节锚点。
+   * 触发条件：文中 v 开头的 h3 版本块 ≥ 5 个（其他文档不受影响）。
+   */
+  (function () {
+    var article = document.querySelector('article.markdown-body');
+    if (!article) return;
+
+    var blocks = [], cur = null, anchor = null;
+    Array.prototype.forEach.call(article.children, function (el) {
+      if (/^H[12]$/.test(el.tagName)) { cur = null; anchor = null; return; }
+      var am = el.querySelector && el.querySelector('a[id^="sec-"]');
+      if (am) anchor = am.id;
+      if (el.tagName === 'H3') {
+        var txt = el.textContent.trim();
+        var m = /^(v[\d.]+(?:\s?(?:补充|修正|附注补|附注|附二|附))?)\s*(?:·|－|—|-)?\s*(.*)$/.exec(txt);
+        if (m) {
+          cur = { ver: m[1], rest: m[2], anchor: anchor, lis: [], codes: [], idx: blocks.length };
+          blocks.push(cur);
+        } else {
+          cur = null;
+        }
+        return;
+      }
+      if (cur) {
+        var lis = el.querySelectorAll ? el.querySelectorAll('li') : [];
+        Array.prototype.forEach.call(lis, function (li) {
+          cur.lis.push(li.textContent.trim());
+          Array.prototype.forEach.call(li.querySelectorAll('code'), function (c) {
+            var t = c.textContent.trim();
+            if (t && cur.codes.indexOf(t) < 0) cur.codes.push(t);
+          });
+        });
+      }
+    });
+    if (blocks.length < 5) return;
+
+    blocks.forEach(function (b) {
+      var rest = b.rest || '';
+      var em = /(E\d+[A-Za-z]*(?:[-~－]\s*E?\d+[A-Za-z]*)?)/.exec(rest);
+      b.exp = em ? em[1] : '';
+      var dm = /(\d{4}-\d{2}-\d{2})/.exec(rest);
+      b.date = dm ? dm[1] : '';
+      b.topic = rest
+        .replace(/（[^）]*）/g, '')
+        .replace(em ? em[1] : '@@N@@', '')
+        .replace(/^[ ·,，、\-]+|[ ·,，、\-]+$/g, '')
+        .replace(/\s{2,}/g, ' ');
+      var concl = [], arts = [];
+      b.lis.forEach(function (t) {
+        if (/^(结论|结果|判决)/.test(t)) concl.push(t);
+        if (/^产物/.test(t)) arts.push(t);
+      });
+      b.concl = concl.length ? concl.join(' ') : (b.lis[0] || '');
+      // 产物名提取：优先 li 内 <code>（md 反引号渲染结果），回退到文件名正则（无反引号的行）
+      var seen = {};
+      var names = b.codes.slice();
+      names.forEach(function (n) { seen[n] = 1; });
+      var rxFile = /[A-Za-z0-9_\-./]+\.(?:csv|png|md|parquet|py|json|html|ipynb|txt)/g;
+      arts.join(' ').replace(rxFile, function (n) {
+        if (!seen[n]) { seen[n] = 1; names.push(n); }
+        return n;
+      });
+      b.arts = names;
+    });
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function clip(s, n) { s = String(s).replace(/\s+/g, ' ').trim(); return s.length > n ? s.slice(0, n) + '…' : s; }
+
+    // DOM：开关按钮 + 全文容器 + 表格容器
+    var full = document.createElement('div');
+    full.id = 'tvFull';
+    while (article.firstChild) full.appendChild(article.firstChild);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'tv-toggle';
+    btn.textContent = '📋 表格速览';
+
+    var tv = document.createElement('div');
+    tv.id = 'tvTable';
+    tv.hidden = true;
+
+    var sorted = blocks.slice().sort(function (a, b2) {
+      var d = (b2.date || '').localeCompare(a.date || '');
+      return d !== 0 ? d : (b2.idx - a.idx);  // 同日按文档出现顺序倒排（新写的在上）
+    });
+    var rows = sorted.map(function (b) {
+      var arts = b.arts.slice(0, 3).map(esc).join('、') + (b.arts.length > 3 ? ' +' + (b.arts.length - 3) : '');
+      var jump = b.anchor
+        ? '<a class="tv-jump" data-anchor="' + esc(b.anchor) + '" href="#' + esc(b.anchor) + '">详见↗</a>'
+        : '';
+      return '<tr>' +
+        '<td class="tv-ver">' + esc(b.ver) + '</td>' +
+        '<td class="tv-date">' + esc(b.date || '—') + '</td>' +
+        '<td class="tv-exp">' + (b.exp ? esc(b.exp) : '—') + '</td>' +
+        '<td class="tv-topic">' + esc(b.topic || '—') + '</td>' +
+        '<td class="tv-concl" title="' + esc(clip(b.concl, 500)) + '">' + esc(clip(b.concl, 150)) + '</td>' +
+        '<td class="tv-arts">' + (arts ? '<code>' + arts + '</code>' : '—') + '</td>' +
+        '<td>' + jump + '</td>' +
+        '</tr>';
+    }).join('');
+
+    tv.innerHTML = '<p class="tv-note">共 ' + blocks.length + ' 个版本块，按时间倒序排列；'
+      + '「关键结论」为该块首条结论的截断摘录，悬停可见更长内容；点「详见↗」跳回全文对应小节。</p>'
+      + '<table class="tv-table"><colgroup>'
+      + '<col style="width:9%"><col style="width:9%"><col style="width:8%"><col style="width:17%">'
+      + '<col style="width:36%"><col style="width:17%"><col style="width:4%">'
+      + '</colgroup><thead><tr>'
+      + '<th>版本</th><th>日期</th><th>实验</th><th>主题</th><th>关键结论（截断）</th><th>产物</th><th></th>'
+      + '</tr></thead><tbody>' + rows + '</tbody></table>';
+
+    article.appendChild(btn);
+    article.appendChild(full);
+    article.appendChild(tv);
+
+    var mode = 'full';
+    function show(which) {
+      mode = which;
+      full.hidden = which !== 'full';
+      tv.hidden = which !== 'table';
+      btn.textContent = which === 'full' ? '📋 表格速览' : '← 返回全文';
+      btn.classList.toggle('active', which === 'table');
+    }
+    btn.addEventListener('click', function () { show(mode === 'full' ? 'table' : 'full'); });
+    tv.addEventListener('click', function (e) {
+      var j = e.target.closest && e.target.closest('.tv-jump');
+      if (!j) return;
+      e.preventDefault();
+      var id = j.getAttribute('data-anchor');
+      show('full');
+      var target = id && document.getElementById(id);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  })();
+
   /* ---------------- 移动端侧栏 ---------------- */
   var navToggle = document.getElementById('navToggle');
   if (navToggle) {

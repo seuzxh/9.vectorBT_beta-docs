@@ -257,6 +257,48 @@ code {
 .doc-list .path { color: #6e7681; font-size: .82em; margin-left: 6px; }
 .doc-note { color: var(--muted); font-size: .88em; margin: 6px 0 2px; }
 
+/* ---------- 版本记录表格速览 ---------- */
+.tv-toggle {
+  display: inline-block;
+  margin: 0 0 18px;
+  padding: 7px 14px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.tv-toggle:hover, .tv-toggle.active { border-color: var(--accent); background: rgba(88, 166, 255, .12); }
+
+.tv-note { color: var(--muted); font-size: 12.5px; margin: 4px 0 12px; }
+
+table.tv-table {
+  display: table;          /* 覆盖 github-markdown-css 的 display:block（其 overflow:auto 会令表头 sticky 失效） */
+  table-layout: fixed;
+  width: 100%;
+  overflow: visible;
+  border-collapse: separate;  /* collapse 模式下 Chrome 表头 sticky 失效 */
+  border-spacing: 0;
+}
+.tv-table thead th {
+  position: sticky;
+  top: var(--topbar-h);
+  z-index: 5;
+  background: var(--panel);
+  box-shadow: 0 1px 0 var(--border);
+}
+.tv-table th, .tv-table td { vertical-align: top; word-break: break-word; }
+.tv-table .tv-ver { white-space: nowrap; font-weight: 700; color: var(--accent); }
+.tv-table .tv-date { white-space: nowrap; }
+.tv-table .tv-exp { white-space: nowrap; font-weight: 600; }
+.tv-table .tv-concl { font-size: .95em; color: var(--text); }
+.tv-table .tv-arts { font-size: .82em; }
+.tv-table .tv-arts code { overflow-wrap: anywhere; }
+.tv-table .tv-jump { white-space: nowrap; font-size: .88em; }
+
 /* ---------- 移动端 ---------- */
 @media (max-width: 960px) {
   .nav-toggle { display: block; }
