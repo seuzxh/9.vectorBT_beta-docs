@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% if page.title and page.url != '/index.html' %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+<meta name="description" content="{{ site.description }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css">
+<link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+</head>
+<body data-base="{{ site.baseurl }}">
+<header class="topbar">
+  <button id="navToggle" class="nav-toggle" aria-label="打开文档目录">☰</button>
+  <a class="brand" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+  <div class="searchbox">
+    <input id="searchInput" type="search" autocomplete="off" spellcheck="false"
+           placeholder="搜索全部文档：关键词 / 术语 / E41 / v1.6 / exp39 …">
+    <div id="searchResults" class="search-results" hidden></div>
+  </div>
+  <a class="gh-link" href="https://github.com/seuzxh/9.vectorBT_beta-docs" target="_blank" rel="noopener">GitHub</a>
+</header>
+
+<div class="layout">
+  <aside id="sidebar" class="sidebar">
+    <nav class="side-nav">
+      <a class="side-link home{% if page.url == '/index.html' %} active{% endif %}" href="{{ '/' | relative_url }}">🏠 首页 · 总览</a>
+
+      {% assign g_concl = site.pages | where: "layout", "default" | where_exp: "p", "p.url == '/最终结论.html'" %}
+      {% assign g_exp   = site.pages | where: "layout", "default" | where_exp: "p", "p.url contains '/实验/'" | sort: "url" %}
+      {% assign g_design = site.pages | where: "layout", "default" | where_exp: "p", "p.url contains '/设计/'" | sort: "url" %}
+      {% assign g_res   = site.pages | where: "layout", "default" | where_exp: "p", "p.url contains '/研究/'" | sort: "url" %}
+      {% assign g_ref   = site.pages | where: "layout", "default" | where_exp: "p", "p.url contains '/参考/'" | sort: "url" %}
+
+      <h3 class="side-label">结论 · 实验记录</h3>
+      {% for p in g_concl %}<a class="side-link{% if p.url == page.url %} active{% endif %}" href="{{ p.url | relative_url }}">{{ p.title }}</a>{% endfor %}
+      {% for p in g_exp %}<a class="side-link{% if p.url == page.url %} active{% endif %}" href="{{ p.url | relative_url }}">{{ p.title }}</a>{% endfor %}
+
+      <h3 class="side-label">设计</h3>
+      {% for p in g_design %}<a class="side-link{% if p.url == page.url %} active{% endif %}" href="{{ p.url | relative_url }}">{{ p.title }}</a>{% endfor %}
+
+      <h3 class="side-label">研究</h3>
+      {% for p in g_res %}
+      <a class="side-link{% if p.url contains '/因子集/' %} sub{% endif %}{% if p.url == page.url %} active{% endif %}" href="{{ p.url | relative_url }}">{{ p.title }}</a>
+      {% endfor %}
+
+      <h3 class="side-label">参考</h3>
+      {% for p in g_ref %}<a class="side-link{% if p.url == page.url %} active{% endif %}" href="{{ p.url | relative_url }}">{{ p.title }}</a>{% endfor %}
+
+      <h3 class="side-label">交互图表</h3>
+      <a class="side-link" href="{{ '/diagrams/architecture.html' | relative_url }}">分层架构图</a>
+      <a class="side-link" href="{{ '/diagrams/workflow_trading.html' | relative_url }}">每日交易流程图</a>
+      <a class="side-link" href="{{ '/diagrams/dataflow_pipeline.html' | relative_url }}">数据管道图</a>
+      <a class="side-link sub" href="{{ '/研究/因子集/图_因子集全景.html' | relative_url }}">因子集全景（E39）</a>
+      <a class="side-link sub" href="{{ '/研究/因子集/图_评估流程.html' | relative_url }}">因子评估流程（E39）</a>
+    </nav>
+    <div class="side-foot">
+      <p>内容唯一来源：<code>docs/</code> 目录。在 GitHub 上阅读为 Markdown 原文，在本站阅读为同一内容的排版页面。</p>
+    </div>
+  </aside>
+
+  <main class="main">
+    <article class="markdown-body">
+{{ content }}
+    </article>
+    <footer class="site-foot">
+      <p>{{ site.title }} · 仓库 <a href="https://github.com/seuzxh/9.vectorBT_beta-docs">seuzxh/9.vectorBT_beta-docs</a> · 本站由 GitHub Pages + Jekyll（静态网站生成器）自动构建</p>
+    </footer>
+  </main>
+</div>
+
+<script src="{{ '/assets/site.js' | relative_url }}"></script>
+</body>
+</html>

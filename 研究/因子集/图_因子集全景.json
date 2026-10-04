@@ -1,0 +1,332 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "E39 因子集学习 · 数据流全景",
+    "locale": "zh-CN",
+    "viewBox": [
+      1080,
+      760
+    ],
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "factor-libraries",
+        "label": "五库并列",
+        "focus": [
+          "ops",
+          "a158",
+          "a360",
+          "a101",
+          "g191",
+          "ht"
+        ],
+        "note": "同一算子层之上，五套因子集并列展开，各自规模与定位不同。"
+      },
+      {
+        "id": "evaluation-path",
+        "label": "评估主路径",
+        "focus": [
+          "qlib_daily",
+          "ops",
+          "a360",
+          "exp39",
+          "reports"
+        ],
+        "note": "从日线仓到评估产物的最短路径（以最强库 Alpha360 为例）。"
+      },
+      {
+        "id": "conclusions",
+        "label": "三大主线",
+        "focus": [
+          "exp39",
+          "insight"
+        ],
+        "note": "834 个因子的评估收敛为三大主线结论。"
+      }
+    ]
+  },
+  "stages": [
+    {
+      "label": "数据源"
+    },
+    {
+      "label": "算子层"
+    },
+    {
+      "label": "因子集"
+    },
+    {
+      "label": "评估"
+    },
+    {
+      "label": "产物与结论"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "qlib_daily",
+      "type": "database",
+      "label": "qlib 日线仓",
+      "sublabel": "5444 只 × 807 日",
+      "tag": "bars_daily",
+      "stage": 0,
+      "row": 0,
+      "height": 58
+    },
+    {
+      "id": "hs300",
+      "type": "database",
+      "label": "沪深300 基准",
+      "sublabel": "Beta / 特异波动",
+      "tag": "benchmark",
+      "stage": 0,
+      "row": 1,
+      "height": 58
+    },
+    {
+      "id": "ops",
+      "type": "backend",
+      "label": "ops 公共算子",
+      "sublabel": "时序 / 截面 / 回归",
+      "tag": "factor_libs/ops.py",
+      "stage": 1,
+      "row": 2,
+      "height": 58
+    },
+    {
+      "id": "a158",
+      "type": "backend",
+      "label": "Alpha158",
+      "sublabel": "158 · K线+29算子",
+      "tag": "|IC| 中位 0.032",
+      "stage": 2,
+      "row": 0,
+      "height": 58
+    },
+    {
+      "id": "a360",
+      "type": "backend",
+      "label": "Alpha360",
+      "sublabel": "360 · 原始价量铺开",
+      "tag": "|IC| 中位 0.047 最强",
+      "stage": 2,
+      "row": 1,
+      "height": 58
+    },
+    {
+      "id": "a101",
+      "type": "backend",
+      "label": "Alpha101",
+      "sublabel": "101 · WorldQuant",
+      "tag": "|IC| 中位 0.013",
+      "stage": 2,
+      "row": 2,
+      "height": 58
+    },
+    {
+      "id": "g191",
+      "type": "backend",
+      "label": "国君191",
+      "sublabel": "187 · A股短周期",
+      "tag": "|IC| 中位 0.023",
+      "stage": 2,
+      "row": 3,
+      "height": 58
+    },
+    {
+      "id": "ht",
+      "type": "backend",
+      "label": "华泰价量",
+      "sublabel": "28 · 风格子集",
+      "tag": "|IC| 中位 0.038",
+      "stage": 2,
+      "row": 4,
+      "height": 58
+    },
+    {
+      "id": "pools",
+      "type": "database",
+      "label": "三池成分",
+      "sublabel": "日中位 191 只",
+      "tag": "pools",
+      "stage": 3,
+      "row": 0,
+      "height": 58
+    },
+    {
+      "id": "exp39",
+      "type": "backend",
+      "label": "E39 评估框架",
+      "sublabel": "663 日池内截面",
+      "tag": "exp39_factor_study.py",
+      "stage": 3,
+      "row": 2,
+      "height": 58
+    },
+    {
+      "id": "reports",
+      "type": "database",
+      "label": "reports 产物",
+      "sublabel": "CSV / 汇总 / 图",
+      "tag": "834 因子 × 17 指标",
+      "stage": 4,
+      "row": 1,
+      "height": 58
+    },
+    {
+      "id": "insight",
+      "type": "frontend",
+      "label": "三大主线",
+      "sublabel": "缩量 · 反转 · 收敛",
+      "tag": "docs/05 §7",
+      "stage": 4,
+      "row": 3,
+      "height": 58
+    }
+  ],
+  "flows": [
+    {
+      "id": "ohlcv",
+      "from": "qlib_daily",
+      "to": "ops",
+      "label": "OHLCV + VWAP",
+      "labelAt": [
+        245,
+        200
+      ]
+    },
+    {
+      "id": "bench",
+      "from": "hs300",
+      "to": "ops",
+      "label": "基准收益",
+      "labelAt": [
+        175,
+        314
+      ]
+    },
+    {
+      "id": "poolmask",
+      "from": "pools",
+      "to": "exp39",
+      "label": "池内掩码",
+      "labelAt": [
+        745,
+        200
+      ]
+    },
+    {
+      "id": "ops_a158",
+      "from": "ops",
+      "to": "a158",
+      "label": "去量纲统计",
+      "labelAt": [
+        430,
+        143
+      ]
+    },
+    {
+      "id": "ops_a360",
+      "from": "ops",
+      "to": "a360",
+      "label": "归一铺开",
+      "labelAt": [
+        470,
+        232
+      ]
+    },
+    {
+      "id": "ops_a101",
+      "from": "ops",
+      "to": "a101",
+      "label": "rank 语法",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelAt": [
+        470,
+        346
+      ]
+    },
+    {
+      "id": "ops_g191",
+      "from": "ops",
+      "to": "g191",
+      "label": "中式价量算子",
+      "labelAt": [
+        478,
+        460
+      ]
+    },
+    {
+      "id": "ops_ht",
+      "from": "ops",
+      "to": "ht",
+      "label": "风格框架",
+      "labelAt": [
+        478,
+        574
+      ]
+    },
+    {
+      "id": "f158",
+      "from": "a158",
+      "to": "exp39",
+      "label": "158 因子"
+    },
+    {
+      "id": "f360",
+      "from": "a360",
+      "to": "exp39",
+      "label": "360 列",
+      "labelAt": [
+        690,
+        340
+      ]
+    },
+    {
+      "id": "f101",
+      "from": "a101",
+      "to": "exp39",
+      "label": "101 因子",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelAt": [
+        782,
+        346
+      ]
+    },
+    {
+      "id": "fg191",
+      "from": "g191",
+      "to": "exp39",
+      "label": "187 因子",
+      "labelAt": [
+        700,
+        440
+      ]
+    },
+    {
+      "id": "fht",
+      "from": "ht",
+      "to": "exp39",
+      "label": "28 因子",
+      "labelAt": [
+        700,
+        480
+      ]
+    },
+    {
+      "id": "metrics",
+      "from": "exp39",
+      "to": "reports",
+      "label": "指标四件套"
+    },
+    {
+      "id": "concl",
+      "from": "exp39",
+      "to": "insight",
+      "label": "横向结论"
+    }
+  ]
+}

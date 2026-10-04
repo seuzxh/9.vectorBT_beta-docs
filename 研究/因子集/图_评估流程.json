@@ -1,0 +1,218 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "E39 单因子评估流程",
+    "locale": "zh-CN",
+    "viewBox": [
+      1000,
+      660
+    ],
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "per-factor-loop",
+        "label": "单因子主循环",
+        "focus": [
+          "loop",
+          "clean",
+          "ic",
+          "agg",
+          "out"
+        ],
+        "note": "834 个因子逐个流过：池内过滤 → 秩 IC → 汇总一行 → 增量落盘，即算即弃控制内存。"
+      },
+      {
+        "id": "parallel-stats",
+        "label": "并行统计",
+        "focus": [
+          "clean",
+          "side_stats",
+          "ic",
+          "agg"
+        ],
+        "note": "5 分组收益与因子自相关同批计算，与秩 IC 一起汇总为指标行。"
+      }
+    ]
+  },
+  "lanes": [
+    {
+      "id": "prep",
+      "label": "数据准备"
+    },
+    {
+      "id": "factor",
+      "label": "因子计算"
+    },
+    {
+      "id": "stat",
+      "label": "截面统计"
+    },
+    {
+      "id": "out",
+      "label": "落盘产出"
+    }
+  ],
+  "phases": [
+    {
+      "id": "ph-prep",
+      "label": "准备",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "ph-factor",
+      "label": "逐因子",
+      "fromCol": 2,
+      "toCol": 3
+    },
+    {
+      "id": "ph-stat",
+      "label": "截面统计",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "emphasis"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "load",
+      "lane": "prep",
+      "col": 0,
+      "type": "database",
+      "label": "加载日线 wide 面板",
+      "sublabel": "807 日 × 5444 只",
+      "width": 132
+    },
+    {
+      "id": "fwd",
+      "lane": "prep",
+      "col": 1,
+      "type": "backend",
+      "label": "前瞻收益 + 池掩码",
+      "sublabel": "fwd1/fwd3 · 日中位 191 只",
+      "width": 140
+    },
+    {
+      "id": "loop",
+      "lane": "factor",
+      "col": 2,
+      "type": "backend",
+      "label": "取下一因子",
+      "sublabel": "五库流式迭代",
+      "width": 120
+    },
+    {
+      "id": "clean",
+      "lane": "factor",
+      "col": 3,
+      "type": "backend",
+      "label": "池内过滤",
+      "sublabel": "截窗 · inf→NaN",
+      "width": 116
+    },
+    {
+      "id": "ic",
+      "lane": "stat",
+      "col": 4,
+      "type": "backend",
+      "label": "逐日秩 IC",
+      "sublabel": "fwd1 / fwd3",
+      "width": 116
+    },
+    {
+      "id": "agg",
+      "lane": "stat",
+      "col": 5,
+      "type": "backend",
+      "label": "汇总指标行",
+      "sublabel": "ICIR·t·多空·覆盖",
+      "width": 128
+    },
+    {
+      "id": "out",
+      "lane": "out",
+      "col": 5,
+      "type": "database",
+      "label": "逐库落盘与汇总",
+      "sublabel": "CSV append · md/png",
+      "width": 136
+    },
+    {
+      "id": "side_stats",
+      "lane": "factor",
+      "col": 4,
+      "type": "backend",
+      "label": "分组收益 + 自相关",
+      "sublabel": "5 分组等权 · t 对 t-1 秩相关",
+      "width": 150
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-load",
+      "from": "load",
+      "to": "fwd",
+      "variant": "default"
+    },
+    {
+      "id": "e-fwd",
+      "from": "fwd",
+      "to": "loop",
+      "label": "掩码与前瞻收益",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e-loop",
+      "from": "loop",
+      "to": "clean",
+      "variant": "default"
+    },
+    {
+      "id": "e-ic",
+      "from": "clean",
+      "to": "ic",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e-side",
+      "from": "clean",
+      "to": "side_stats",
+      "variant": "default"
+    },
+    {
+      "id": "e-agg-ic",
+      "from": "ic",
+      "to": "agg",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e-agg-side",
+      "from": "side_stats",
+      "to": "agg",
+      "variant": "default"
+    },
+    {
+      "id": "e-out",
+      "from": "agg",
+      "to": "out",
+      "variant": "default"
+    },
+    {
+      "id": "e-cycle",
+      "from": "out",
+      "to": "loop",
+      "label": "下一因子（834 次）",
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "load",
+    "fwd",
+    "loop",
+    "clean",
+    "ic",
+    "agg",
+    "out"
+  ]
+}

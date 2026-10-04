@@ -1,0 +1,16 @@
+---
+---
+[
+{% assign ents = site.pages | where: "layout", "default" | sort: "url" %}
+{% assign first = false %}
+{% for p in ents %}
+{% unless p.url == '/index.html' %}
+{% if first %},{% endif %}{% assign first = true %}
+{
+  "t": {{ p.title | default: p.name | jsonify }},
+  "u": {{ p.url | jsonify }},
+  "x": {{ p.content | strip_html | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&quot;', '"' | replace: '&#39;', "'" | replace: '&amp;', '&' | jsonify }}
+}
+{% endunless %}
+{% endfor %}
+]

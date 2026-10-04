@@ -1,0 +1,9 @@
+title: 高Beta短线选股策略验证
+description: 三池高Beta短线选股策略验证 · 全量文档 / 实验索引 / 术语表 / 全文关键词搜索
+baseurl: "/9.vectorBT_beta-docs"
+url: "https://seuzxh.github.io"
+markdown: kramdown
+kramdown:
+  input: GFM
+plugins:
+  - jekyll-relative-links

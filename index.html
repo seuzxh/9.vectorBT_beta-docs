@@ -1,0 +1,175 @@
+---
+layout: default
+title: 首页
+---
+
+<section class="hero">
+  <h1>高Beta短线选股策略验证</h1>
+  <p class="sub">三池（883910 热股 / 883926 高贝塔 / 883409 强势）× 联合模型 × 情绪门控 × 可成交纪律 ——
+  项目全部文档、实验索引与术语速查的统一入口。</p>
+  <p class="badges">
+    <span class="badge blue">实验链 E0~E44</span>
+    <span class="badge blue">版本记录 v0.1~v1.11</span>
+    <span class="badge green">当前基线 v1.6 诚实口径</span>
+    <span class="badge orange">全文关键词搜索（顶栏输入框）</span>
+  </p>
+</section>
+
+<h2>快速入口</h2>
+<div class="grid">
+  <div class="card">
+    <h3>📕 最终结论（权威汇总）</h3>
+    <p>全项目结论的权威文档：v1.6 判决摘要、四大判决（尾盘方向 / 封板幻影 / 出场过滤 / 因子资产）、跨周期支柱与被推翻清单。</p>
+    <p class="more"><a href="{{ '/最终结论.html' | relative_url }}">→ 阅读</a></p>
+  </div>
+  <div class="card">
+    <h3>📋 实验总览（一表速查）</h3>
+    <p>一行一实验的速查表：编号、做了什么、判决、关键数字与详见跳转；另含基线演变主线（v0.5→v1.6 八个台阶）与被推翻清单（更新至 E41b，E42~E44 见研究分栏）。</p>
+    <p class="more"><a href="{{ '/实验/06_实验总览.html' | relative_url }}">→ 阅读</a></p>
+  </div>
+  <div class="card">
+    <h3>🗂 实验版本记录（Changelog）</h3>
+    <p>v0.1~v1.11 版本链，每块含方法、完整结论与产物清单，供回溯与跨版本对比。</p>
+    <p class="more"><a href="{{ '/实验/实验版本记录.html' | relative_url }}">→ 阅读</a></p>
+  </div>
+  <div class="card">
+    <h3>📖 术语表</h3>
+    <p>标准说法对照（子策略 / 环节 / 标的全集）、缩写约定（毛 / 净、IC、OOS、T/T-1）与代码标识符中文含义对照。</p>
+    <p class="more"><a href="{{ '/参考/04_术语表.html' | relative_url }}">→ 阅读</a></p>
+  </div>
+</div>
+
+<h2>当前基线（v1.6 诚实基线）</h2>
+<div class="grid">
+  <div class="card">
+    <h3>策略配置</h3>
+    <p><span class="badge blue">三池并集</span> T-1 收盘约 150~210 只候选<br>
+    <span class="badge blue">联合模型</span> 30+ 因子 ridge 月度 walk-forward<br>
+    <span class="badge green">D_G2_or_MA20 门控</span> 空仓约 28%<br>
+    <span class="badge orange">可成交纪律</span> 9:35 已封板剔除、顺位补足（REPLACE）<br>
+    <span class="badge orange">尾盘出场过滤</span> 模型分位 &lt;0.4 当日 14:45 提前出<br>
+    <span class="badge gray">止损 3% · T+2 收盘出场 · 三批资金</span></p>
+  </div>
+  <div class="card">
+    <h3>业绩（含成本，walk-forward 样本外）</h3>
+    <table>
+      <tr><th>周期</th><th>净收益</th><th>回撤</th><th>v1.5 官方（对照）</th></tr>
+      <tr><td>2024-25（2 年）</td><td class="pos">+22.1%</td><td class="neg">−21.8%</td><td>+185.0%</td></tr>
+      <tr><td>2026（前 7 个月）</td><td class="pos">+9.5%</td><td class="neg">−16.3%</td><td>+29.0%</td></tr>
+    </table>
+    <p>口径：E22 日频记账，往返成本 0.55%，2026-10-03 数据重建后复验。
+    v1.5 对照数字含封板不可成交虚增（E24/E25 审计），仅作参照。</p>
+  </div>
+</div>
+
+<h2>实验名词索引</h2>
+<p>实验报告里反复出现的名词分属四套命名体系，含义与入口如下；
+顶栏搜索框对全站文档做全文检索，中文关键词、缩写、编号均可（如「封板」「门控」「IC」「E25」「v1.6」「exp39」），
+多词用空格分隔表示同时命中，回车直达第一个结果并在页面内自动定位首个命中段落。</p>
+<table>
+  <tr><th>名词体系</th><th>含义</th><th>入口</th></tr>
+  <tr>
+    <td><b>E0~E44</b></td>
+    <td>实验轮次编号，一轮对应一个实验或口径事件；E27~E38 跳空未登记（并行会话产物仅存 <code>data/proc/</code>）。速查表更新至 E41b，E42~E44 见研究分栏文档。</td>
+    <td><a href="{{ '/实验/06_实验总览.html' | relative_url }}">实验总览 · 一表速查</a></td>
+  </tr>
+  <tr>
+    <td><b>v0.1~v1.11</b></td>
+    <td>实验版本记录链（changelog），每个版本块含方法、完整结论与产物清单。</td>
+    <td><a href="{{ '/实验/实验版本记录.html' | relative_url }}">实验版本记录</a></td>
+  </tr>
+  <tr>
+    <td><b>exp1~exp44</b></td>
+    <td>与实验对应的可重放脚本 <code>scripts/exp*.py</code> 及产物 <code>reports/exp*_*</code>（图表 / CSV）。</td>
+    <td><a href="https://github.com/seuzxh/9.vectorBT_beta/tree/master/scripts">GitHub scripts/</a> ·
+        <a href="https://github.com/seuzxh/9.vectorBT_beta/tree/master/reports">reports/</a></td>
+  </tr>
+  <tr>
+    <td><b>术语与缩写</b></td>
+    <td>毛 / 净、bps、pp、IC、OOS、门控、相位 / 阶段、REPLACE / CASH 等标准说法与含义。</td>
+    <td><a href="{{ '/参考/04_术语表.html' | relative_url }}">术语表</a></td>
+  </tr>
+</table>
+
+<h2>文档目录（docs/ 全量）</h2>
+{% assign g_concl = site.pages | where: "layout", "default" | where_exp: "p", "p.url == '/最终结论.html'" %}
+{% assign g_exp   = site.pages | where: "layout", "default" | where_exp: "p", "p.url contains '/实验/'" | sort: "url" %}
+{% assign g_design = site.pages | where: "layout", "default" | where_exp: "p", "p.url contains '/设计/'" | sort: "url" %}
+{% assign g_res   = site.pages | where: "layout", "default" | where_exp: "p", "p.url contains '/研究/'" | sort: "url" %}
+{% assign g_ref   = site.pages | where: "layout", "default" | where_exp: "p", "p.url contains '/参考/'" | sort: "url" %}
+{% assign g_all   = site.pages | where: "layout", "default" %}
+<p class="doc-note">以下由站点构建时自动收录，共 {{ g_all.size | minus: 1 }} 篇（不含本页）；
+新增文档放入 <code>docs/</code> 并带 front matter（文件头部的元数据声明，指定版式与标题）后，
+自动进入目录、侧栏与搜索索引。</p>
+
+<h3 class="doc-cat">结论 · 实验记录</h3>
+<ul class="doc-list">
+  {% for p in g_concl %}<li><a href="{{ p.url | relative_url }}">{{ p.title }}</a><span class="path">{{ p.url }}</span></li>{% endfor %}
+  {% for p in g_exp %}<li><a href="{{ p.url | relative_url }}">{{ p.title }}</a><span class="path">{{ p.url }}</span></li>{% endfor %}
+</ul>
+
+<h3 class="doc-cat">设计</h3>
+<ul class="doc-list">
+  {% for p in g_design %}<li><a href="{{ p.url | relative_url }}">{{ p.title }}</a><span class="path">{{ p.url }}</span></li>{% endfor %}
+</ul>
+
+<h3 class="doc-cat">研究（含因子集分册）</h3>
+<ul class="doc-list">
+  {% for p in g_res %}<li><a href="{{ p.url | relative_url }}">{{ p.title }}</a><span class="path">{{ p.url }}</span></li>{% endfor %}
+</ul>
+
+<h3 class="doc-cat">参考</h3>
+<ul class="doc-list">
+  {% for p in g_ref %}<li><a href="{{ p.url | relative_url }}">{{ p.title }}</a><span class="path">{{ p.url }}</span></li>{% endfor %}
+</ul>
+
+<h2>交互式图表</h2>
+<div class="grid">
+  <div class="card">
+    <h3>📊 分层架构图</h3>
+    <p>六层架构（config→数据→因子→模型→回测→实验）与数据流全景，支持聚焦视图。</p>
+    <p class="more"><a href="{{ '/diagrams/architecture.html' | relative_url }}">→ 打开架构图</a></p>
+  </div>
+  <div class="card">
+    <h3>🔄 每日交易流程图</h3>
+    <p>T-1 池快照 → 特征计算 → 门控 → 模型打分 → Top5 → 三批执行 → T+2 出场，含空仓与封板剔除分支。</p>
+    <p class="more"><a href="{{ '/diagrams/workflow_trading.html' | relative_url }}">→ 打开流程图</a></p>
+  </div>
+  <div class="card">
+    <h3>📦 数据管道图</h3>
+    <p>iFinD / qlib 仓 → dump 脚本 → raw/proc 缓存 → 全特征面板 → 研究实验 / 实盘候选。</p>
+    <p class="more"><a href="{{ '/diagrams/dataflow_pipeline.html' | relative_url }}">→ 打开管道图</a></p>
+  </div>
+  <div class="card">
+    <h3>🧩 因子集全景 / 评估流程（E39）</h3>
+    <p>五套经典因子集（Alpha158 / Alpha360 / Alpha101 / 国君191 / 华泰价量）全景图与统一评估流程图。</p>
+    <p class="more"><a href="{{ '/研究/因子集/图_因子集全景.html' | relative_url }}">因子集全景</a> ·
+    <a href="{{ '/研究/因子集/图_评估流程.html' | relative_url }}">评估流程</a></p>
+  </div>
+</div>
+
+<h2>核心发现（v1.6 修订版）</h2>
+<div class="grid">
+  <div class="card">
+    <h3>✅ 四大跨周期支柱</h3>
+    <p>① 联合模型排序能力（IC 0.04~0.10）<br>
+    ② D_G2_or_MA20 情绪门控（空仓约减半至 28%）<br>
+    ③ 止损 3% + T+2 收盘出场（日均 +70%）<br>
+    ④ 可成交纪律 + 尾盘出场过滤（v1.6 新增）</p>
+  </div>
+  <div class="card">
+    <h3>❌ 被推翻的假设</h3>
+    <p>• 14:45 尾盘买入（纸面 alpha 的 91% 来自已封板票）<br>
+    • 短窗大幅优于标准窗（两者等价）<br>
+    • 分歧 = 反包买点（周期依赖）<br>
+    • 跌超阈值才空仓（防不住持续阴跌）<br>
+    • 「IC 显著即可交易」（E41/E41b 净口径全负）</p>
+  </div>
+  <div class="card">
+    <h3>⚠️ 数据工程陷阱</h3>
+    <p>• 后复权仓 volume × factor = 真实量（非 ÷）<br>
+    • nav_C 盯市缺陷致净值高估（E18 修正）<br>
+    • 板块涨停差异（10% / 20% / 30%）需感知<br>
+    • data/ 误删事故与全量重建复验（10-03）</p>
+  </div>
+</div>
