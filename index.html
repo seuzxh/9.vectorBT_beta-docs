@@ -8,9 +8,10 @@ title: 首页
   <p class="sub">三池（883910 热股 / 883926 高贝塔 / 883409 强势）× 联合模型 × 情绪门控 × 可成交纪律 ——
   项目全部文档、实验索引与术语速查的统一入口。</p>
   <p class="badges">
-    <span class="badge blue">实验链 E0~E44</span>
-    <span class="badge blue">版本记录 v0.1~v1.11</span>
-    <span class="badge green">当前基线 v1.6 诚实口径</span>
+    <span class="badge blue">实验链 E0~E50</span>
+    <span class="badge blue">版本记录 v0.1~v1.20</span>
+    <span class="badge green">当前基线 v1.6 合法口径（E50 档B）</span>
+    <span class="badge red">DDR-T 深跌反包已证伪（v1.18）</span>
     <span class="badge orange">全文关键词搜索（顶栏输入框）</span>
   </p>
 </section>
@@ -37,9 +38,19 @@ title: 首页
     <p>标准说法对照（子策略 / 环节 / 标的全集）、缩写约定（毛 / 净、IC、OOS、T/T-1）与代码标识符中文含义对照。</p>
     <p class="more"><a href="{{ '/参考/04_术语表.html' | relative_url }}">→ 阅读</a></p>
   </div>
+  <div class="card">
+    <h3>🛡 生产前校验清单（含 v1.6 线）</h3>
+    <p>DDR-T v1.0-prod 的 P0/P1 校验全记录（2026-10-05 执行完毕，未通过、不得实盘）与 v1.6 合法口径（E50 档B）第一轮审计（v1.20，六项无否决项）。</p>
+    <p class="more"><a href="{{ '/策略/生产前校验清单.html' | relative_url }}">→ 阅读</a></p>
+  </div>
+  <div class="card">
+    <h3>📕 深跌反包·尾盘策略 v1.1-prod（已证伪存档）</h3>
+    <p>第二轮研究线（E42-E48）定稿的生产策略文档；2026-10-05 生产前校验发现日线对齐前视（昨收=T+1 收盘），修正口径重放日均净 −94.3bps，未通过校验，仅作教训存档。</p>
+    <p class="more"><a href="{{ '/策略/深跌反包_尾盘策略.html' | relative_url }}">→ 阅读</a></p>
+  </div>
 </div>
 
-<h2>当前基线（v1.6 诚实基线）</h2>
+<h2>当前基线（v1.6 合法口径，E50 档B）</h2>
 <div class="grid">
   <div class="card">
     <h3>策略配置</h3>
@@ -47,18 +58,19 @@ title: 首页
     <span class="badge blue">联合模型</span> 30+ 因子 ridge 月度 walk-forward<br>
     <span class="badge green">D_G2_or_MA20 门控</span> 空仓约 28%<br>
     <span class="badge orange">可成交纪律</span> 9:35 已封板剔除、顺位补足（REPLACE）<br>
-    <span class="badge orange">尾盘出场过滤</span> 模型分位 &lt;0.4 当日 14:45 提前出<br>
+    <span class="badge orange">尾盘出场过滤</span> 模型分位 &lt;0.4 触发，<b>T+1 14:45 出场</b>（E50 档B 合法化）<br>
     <span class="badge gray">止损 3% · T+2 收盘出场 · 三批资金</span></p>
   </div>
   <div class="card">
     <h3>业绩（含成本，walk-forward 样本外）</h3>
     <table>
-      <tr><th>周期</th><th>净收益</th><th>回撤</th><th>v1.5 官方（对照）</th></tr>
-      <tr><td>2024-25（2 年）</td><td class="pos">+22.1%</td><td class="neg">−21.8%</td><td>+185.0%</td></tr>
-      <tr><td>2026（前 7 个月）</td><td class="pos">+9.5%</td><td class="neg">−16.3%</td><td>+29.0%</td></tr>
+      <tr><th>周期</th><th>净收益</th><th>回撤</th><th>旧口径（不可执行，对照）</th></tr>
+      <tr><td>2024-25（2 年）</td><td class="pos">+9.9%</td><td class="neg">−24.1%</td><td>+22.1%</td></tr>
+      <tr><td>2026（3-9 月）</td><td class="pos">+13.5%</td><td class="neg">−15.6%</td><td>+9.5%</td></tr>
     </table>
-    <p>口径：E22 日频记账，往返成本 0.55%，2026-10-03 数据重建后复验。
-    v1.5 对照数字含封板不可成交虚增（E24/E25 审计），仅作参照。</p>
+    <p>口径：E22 日频记账，往返成本 0.55%。E50（v1.17）发现旧「尾盘过滤当日 14:45 出场」
+    违反 T+1（贡献 +23pp），上表为 T+1 14:45 合法档；对照组数字仅作不可执行口径参照。
+    生产推进前置件见 <a href="{{ '/策略/生产前校验清单.html' | relative_url }}">生产前校验清单第二部分</a>。</p>
   </div>
 </div>
 
@@ -69,17 +81,17 @@ title: 首页
 <table>
   <tr><th>名词体系</th><th>含义</th><th>入口</th></tr>
   <tr>
-    <td><b>E0~E44</b></td>
-    <td>实验轮次编号，一轮对应一个实验或口径事件；E27~E38 跳空未登记（并行会话产物仅存 <code>data/proc/</code>）。速查表更新至 E41b，E42~E44 见研究分栏文档。</td>
+    <td><b>E0~E50</b></td>
+    <td>实验轮次编号，一轮对应一个实验或口径事件；E27~E38 跳空未登记（并行会话产物仅存 <code>data/proc/</code>）。速查表更新至 E41b，E42~E50 见研究分栏文档与版本记录 v1.12-v1.20。</td>
     <td><a href="{{ '/实验/06_实验总览.html' | relative_url }}">实验总览 · 一表速查</a></td>
   </tr>
   <tr>
-    <td><b>v0.1~v1.11</b></td>
-    <td>实验版本记录链（changelog），每个版本块含方法、完整结论与产物清单。</td>
+    <td><b>v0.1~v1.20</b></td>
+    <td>实验版本记录链（changelog），每个版本块含方法、完整结论与产物清单。v1.16-v1.20 为第二轮研究线（E39-E50）与生产前校验记录。</td>
     <td><a href="{{ '/实验/实验版本记录.html' | relative_url }}">实验版本记录</a></td>
   </tr>
   <tr>
-    <td><b>exp1~exp44</b></td>
+    <td><b>exp1~exp50</b></td>
     <td>与实验对应的可重放脚本 <code>scripts/exp*.py</code> 及产物 <code>reports/exp*_*</code>（图表 / CSV）。</td>
     <td><a href="https://github.com/seuzxh/9.vectorBT_beta/tree/master/scripts">GitHub scripts/</a> ·
         <a href="https://github.com/seuzxh/9.vectorBT_beta/tree/master/reports">reports/</a></td>
